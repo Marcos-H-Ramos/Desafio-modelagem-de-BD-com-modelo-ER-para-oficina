@@ -20,8 +20,8 @@ ENGINE = InnoDB;
 -- Table `oficina`.`Veiculo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `oficina`.`Veiculo` (
-  `idVeiculo` INT NOT NULL,
-  `Placa do veiculo` VARCHAR(8) NOT NULL,
+  `idVeiculo` INT NOT NULL UNIQUE,
+  `Placa do veiculo` VARCHAR(8) NOT NULL UNIQUE,
   `Modelo` VARCHAR(23) NOT NULL,
   `Marca` VARCHAR(15) NULL,
   `Ano` INT NULL,
@@ -34,6 +34,10 @@ CREATE TABLE IF NOT EXISTS `oficina`.`Veiculo` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+ALTER TABLE `oficina`.`Veiculo` 
+RENAME COLUMN `Placa do veiculo` TO `placa_do_veiculo`;
+
 
 
 -- -----------------------------------------------------
@@ -49,17 +53,17 @@ ENGINE = InnoDB;
 -- Table `oficina`.`Ordem de serviço`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `oficina`.`Ordem de serviço` (
-  `idOrdem de serviço` INT NOT NULL,
+  `idOrdem de serviço` INT NOT NULL UNIQUE,
   `n°` INT NOT NULL,
-  `Status` VARCHAR(45) NULL,
-  `Serviços` VARCHAR(45) NULL,
+  `Veiculo_idVeiculo` INT NOT NULL,
+  `Status` ENUM('Orçamento', 'Aprovado', 'Recusado', 'Concluido') NULL DEFAULT 'Orçamento',
+  `Serviços` VARCHAR(255) NOT NULL,
   `Data de Emissão` DATE NULL,
   `Data de Entrega` DATE NULL,
-  `Horas de Trabalho` INT NOT NULL,
-  `Valor` FLOAT NULL,
+  `Horas de Trabalho` INT NOT NULL DEFAULT 0,
   `Equipe de mecânicos_idEquipe de mecânicos` INT NOT NULL,
-  `Veiculo_idVeiculo` INT NOT NULL,
-  PRIMARY KEY (`idOrdem de serviço`, `Equipe de mecânicos_idEquipe de mecânicos`, `Veiculo_idVeiculo`),
+  `Valor` FLOAT NULL,
+  PRIMARY KEY (`idOrdem de serviço`, `n°`, `Veiculo_idVeiculo`),
   INDEX `fk_Ordem de serviço_Equipe de mecânicos1_idx` (`Equipe de mecânicos_idEquipe de mecânicos` ASC) VISIBLE,
   UNIQUE INDEX `n°_UNIQUE` (`n°` ASC) VISIBLE,
   INDEX `fk_Ordem de serviço_Veiculo1_idx` (`Veiculo_idVeiculo` ASC) VISIBLE,
@@ -143,20 +147,40 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `oficina`.`Composição da Equipe`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `oficina`.`Composição da Equipe` (
-  `Mecânico_idMecânico` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `Oficina`.`Composição da Equipe` (
   `Equipe de mecânicos_idEquipe de mecânicos` INT NOT NULL,
-  PRIMARY KEY (`Mecânico_idMecânico`, `Equipe de mecânicos_idEquipe de mecânicos`),
-  INDEX `fk_Mecânico_has_Equipe de mecânicos_Equipe de mecânicos1_idx` (`Equipe de mecânicos_idEquipe de mecânicos` ASC) VISIBLE,
-  INDEX `fk_Mecânico_has_Equipe de mecânicos_Mecânico1_idx` (`Mecânico_idMecânico` ASC) VISIBLE,
-  CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Mecânico1`
-    FOREIGN KEY (`Mecânico_idMecânico`)
-    REFERENCES `oficina`.`Mecânico` (`idMecânico`)
+  `Mecânico_idMecânico_Lider` INT NOT NULL,
+  `Mecânico_idMecânico_2` INT NULL,
+  `Mecânico_idMecânico_3` INT NULL,
+  `Mecânico_idMecânico_4` INT NULL,
+  PRIMARY KEY (`Equipe de mecânicos_idEquipe de mecânicos`),
+  INDEX `fk_Mecânico_has_Equipe de mecânicos_Mecânico_lider_idx` (`Mecânico_idMecânico_Lider` ASC) VISIBLE,
+  INDEX `fk_Mecânico_has_Equipe de mecânicos_Mecânico_2_idx` (`Mecânico_idMecânico_2` ASC) VISIBLE,
+  INDEX `fk_Mecânico_has_Equipe de mecânicos_Mecânico_3_idx` (`Mecânico_idMecânico_3` ASC) VISIBLE,
+  INDEX `fk_Mecânico_has_Equipe de mecânicos_Mecânico_4_idx` (`Mecânico_idMecânico_4` ASC) VISIBLE,
+  CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Mecânico_lider`
+    FOREIGN KEY (`Mecânico_idMecânico_Lider`)
+    REFERENCES `Oficina`.`Mecânico` (`idMecânico`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Equipe de mecânicos1`
     FOREIGN KEY (`Equipe de mecânicos_idEquipe de mecânicos`)
-    REFERENCES `oficina`.`Equipe de mecânicos` (`idEquipe de mecânicos`)
+    REFERENCES `Oficina`.`Equipe de mecânicos` (`idEquipe de mecânicos`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Mecânico_2`
+    FOREIGN KEY (`Mecânico_idMecânico_2`)
+    REFERENCES `Oficina`.`Mecânico` (`idMecânico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Mecânico_3`
+    FOREIGN KEY (`Mecânico_idMecânico_3`)
+    REFERENCES `Oficina`.`Mecânico` (`idMecânico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Mecânico_has_Equipe de mecânicos_Mecânico_4`
+    FOREIGN KEY (`Mecânico_idMecânico_4`)
+    REFERENCES `Oficina`.`Mecânico` (`idMecânico`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
