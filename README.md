@@ -17,11 +17,17 @@ Relacionados Clientes, Veiculos, ordens de serviço, equipes responsaveis, mecan
 	Persistir_dados_oficina.sql
 
 4. Persistidos dados no BD e testado com algumas consultas SQL com: 
-[x] SELECT Statement
-[x] Filtros com WHERE Statement
-[x] Expressões para gerar atributos derivados
-[x] Ordenações dos dados com ORDER BY
-[x] Filtrar grupos com HAVING Statement
+
+	[x] SELECT Statement
+
+	[x] Filtros com WHERE Statement
+
+	[x] Expressões para gerar atributos derivados
+
+	[x] Ordenações dos dados com ORDER BY
+
+	[x] Filtrar grupos com HAVING Statement
+
 
 Queries estão no arquivo Queries_Desafio.sql
 
